@@ -37,10 +37,10 @@ class App {
     //set up session support
     this.app.use(
       session({
-        secret: COOKIE_SECRET;
-        resave: false;
-        saveUninitialized: true;
-        cookie: {secure: false};
+        secret: COOKIE_SECRET,
+        resave: false,
+        saveUninitialized: true,
+        cookie: {secure: false},
       })
     )
 
