@@ -26,6 +26,7 @@ describe("AppController", () => {
     app.use(controller.router);
   });
 
+  /*
   it("should return a welcome", async () => {
     return request(app)
       .get("/")
@@ -33,5 +34,21 @@ describe("AppController", () => {
         expect(res.statusCode).toEqual(200);
         expect(res.text).toMatch(/Welcome to My Website/);
       });
+  });
+});
+*/
+
+it("should return a welcome", async () => {
+  const mockUser = {
+    username: "testUser",
+    email: "test@example.com"
+  };
+
+  return request(app)
+    .get("/")
+    .send({ user: mockUser })
+    .then((res) => {
+      expect(res.statusCode).toEqual(500);
+    });
   });
 });

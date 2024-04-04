@@ -50,7 +50,7 @@ export class AppController {
 
         // Otherwise, send them to the login page
       } else {
-        res.render("login", {
+        res.render("/login", {
           error: "You need to log in first",
         });
       }
@@ -64,6 +64,7 @@ export class AppController {
         });
       } catch (err) {
         this.log.error(err);
+        res.status(500).send("Internal Server Error");
       }
     });
   }
