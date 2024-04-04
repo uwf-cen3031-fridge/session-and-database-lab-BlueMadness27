@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { pino } from 'pino';
+import { pino } from "pino";
 import { UserService } from "../services/user.service";
 
 export class AppController {
@@ -11,20 +11,13 @@ export class AppController {
   }
 
   private initializeRouter() {
-
-    this.router.get("/login", (req: any, res: Response) => {
+    this.router.get("/login", function (req, res) {
       res.render("login");
     });
 
-    this.router.post("/login", (req: any, res: Response) => {
-      req.session.user = req.body.username;
-      res.redirect("/");
-    });
-
-    this.router.get("/logout", (req: any, res: Response) => {
-      req.session.destroy(() => {
-        res.redirect("/");
-      });
+    this.router.get("/logout", function (req:any, res) {
+      delete req.session.user;
+      res.render("login");
     });
 
     this.router.get("/signup", function (req, res) {
@@ -38,7 +31,7 @@ export class AppController {
     });
 
     // Handle login form submissions
-    this.router.post("/Login", async (req: any, res) => {
+    this.router.post("/processLogin", async (req: any, res) => {
       const user = await this.userService.authenticateUser(req.body.username, req.body.password);
       if (user) {
         req.session.user = user;
@@ -48,29 +41,30 @@ export class AppController {
       }
     });
 
-    //PROTECT THE HOMEPAGE
-    const enforceLogin = (req: any, res: Response, next: any) => {
-      if(req.session.user){
+    // Enforce security
+    this.router.use((req: any, res, next) => {
+      // If the user is set in the session,
+      // pass them on
+      if (req.session.user) {
         next();
-      }else{
-        res.redirect("/login");
-      }
-    };
 
-    //Security middleware
-    this.router.use(enforceLogin);
+        // Otherwise, send them to the login page
+      } else {
+        res.render("login", {
+          error: "You need to log in first",
+        });
+      }
+    });
 
     // Serve the home page
-    this.router.get("/", enforceLogin, (req: any, res: Response) => {
+    this.router.get("/", (req: any, res: Response) => {
       try {
-        // Render the "home" template as HTML
         res.render("home", {
-          user: req.session.user
+          user: req.session.user,
         });
       } catch (err) {
         this.log.error(err);
       }
     });
-    
   }
 }
