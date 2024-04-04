@@ -42,7 +42,7 @@ class App {
         saveUninitialized: true,
         cookie: {secure: false},
       })
-    )
+    );
 
     // Set up handlebars for our templating
     HandlebarsMiddleware.setup(this.app);
