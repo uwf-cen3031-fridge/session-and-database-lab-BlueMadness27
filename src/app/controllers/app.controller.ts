@@ -43,12 +43,8 @@ export class AppController {
 
     // Enforce security
     this.router.use((req: any, res, next) => {
-      // If the user is set in the session,
-      // pass them on
       if (req.session.user) {
         next();
-
-        // Otherwise, send them to the login page
       } else {
         res.render("login", {
           error: "You need to log in first",
